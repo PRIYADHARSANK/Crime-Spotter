@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrimeSpotter - Manage Crime Records</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #1a1a1a 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(10, 10, 10, 0.8) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(50, 205, 50, 0.2);
+            box-shadow: 0 8px 32px rgba(50, 205, 50, 0.1);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .header-icon {
+            font-size: 40px;
+            color: #32CD32;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(15, 15, 15, 0.9) 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(50, 205, 50, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            color: #32CD32;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #crimeForm {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #32CD32;
+            font-size: 18px;
+        }
+
+        form input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border-radius: 12px;
+            border: 1px solid rgba(50, 205, 50, 0.2);
+            background-color: rgba(26, 26, 26, 0.8);
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        form input:focus {
+            outline: none;
+            border-color: #32CD32;
+            background-color: rgba(26, 26, 26, 1);
+            box-shadow: 0 0 20px rgba(50, 205, 50, 0.2);
+        }
+
+        form input::placeholder {
+            color: #666;
+        }
+
+        /* Buttons */
+        .button-group {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 15px 40px;
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #32CD32 0%, #28a428 100%);
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(50, 205, 50, 0.4);
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #e94560 0%, #c23550 100%);
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #6C5CE7 0%, #5849c7 100%);
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
+        }
+
+        /* Stats Cards */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(15, 15, 15, 0.9) 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(50, 205, 50, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(50, 205, 50, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #32CD32;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(15, 15, 15, 0.9) 100%);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(50, 205, 50, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-title {
+            font-size: 1.5rem;
+            color: #32CD32;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 10px 15px 10px 40px;
+            border-radius: 10px;
+            border: 1px solid rgba(50, 205, 50, 0.2);
+            background-color: rgba(26, 26, 26, 0.8);
+            color: #fff;
+            width: 250px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #32CD32;
+        }
+
+        .table-container {
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: auto;
+            border-radius: 15px;
+        }
+
+        /* Custom Scrollbar */
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: rgba(26, 26, 26, 0.5);
+            border-radius: 10px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #32CD32;
+            border-radius: 10px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #28a428;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #32CD32;
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(15, 15, 15, 0.95) 100%);
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        th:first-child {
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        th:last-child {
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        tbody tr {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.6) 0%, rgba(15, 15, 15, 0.6) 100%);
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: linear-gradient(135deg, rgba(50, 205, 50, 0.1) 0%, rgba(40, 164, 40, 0.1) 100%);
+            transform: scale(1.01);
+            box-shadow: 0 5px 20px rgba(50, 205, 50, 0.2);
+        }
+
+        td {
+            padding: 18px 15px;
+            text-align: left;
+            border: none;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        td:first-child {
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+            font-weight: 600;
+            color: #32CD32;
+        }
+
+        td:last-child {
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        /* Loading & Empty States */
+        .loading-state, .empty-state, .error-state {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 1.2rem;
+            color: #888;
+        }
+
+        .loading-state i, .empty-state i, .error-state i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: block;
+            color: #32CD32;
+        }
+
+        .error-state i {
+            color: #e94560;
+        }
+
+        /* Crime Type Badge */
+        .crime-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            margin: 15% auto;
+            padding: 0;
+            border: 1px solid rgba(50, 205, 50, 0.3);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease;
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, rgba(50, 205, 50, 0.2) 0%, rgba(40, 164, 40, 0.1) 100%);
+            padding: 25px;
+            border-bottom: 1px solid rgba(50, 205, 50, 0.2);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #32CD32;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-header p {
+            margin: 10px 0 0 0;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .passkey-input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .passkey-input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #32CD32;
+            font-size: 18px;
+        }
+
+        #passkeyInput {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border-radius: 12px;
+            border: 1px solid rgba(50, 205, 50, 0.2);
+            background-color: rgba(26, 26, 26, 0.8);
+            color: #fff;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        #passkeyInput:focus {
+            outline: none;
+            border-color: #32CD32;
+            background-color: rgba(26, 26, 26, 1);
+            box-shadow: 0 0 20px rgba(50, 205, 50, 0.3);
+        }
+
+        .modal-footer {
+            padding: 0 30px 30px 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .modal-btn-confirm {
+            background: linear-gradient(135deg, #32CD32 0%, #28a428 100%);
+            color: #fff;
+        }
+
+        .modal-btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(50, 205, 50, 0.4);
+        }
+
+        .modal-btn-cancel {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.3) 0%, rgba(195, 53, 80, 0.3) 100%);
+            color: #e94560;
+            border: 1px solid rgba(233, 69, 96, 0.3);
+        }
+
+        .modal-btn-cancel:hover {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.4) 0%, rgba(195, 53, 80, 0.4) 100%);
+            transform: translateY(-2px);
+        }
+
+        .passkey-error {
+            color: #e94560;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* Edit Crime Modal */
+        .edit-modal {
+            display: none;
+            position: fixed;
+            z-index: 1100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .edit-modal-content {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            margin: 5% auto;
+            padding: 0;
+            border: 1px solid rgba(50, 205, 50, 0.3);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease;
+            overflow: hidden;
+        }
+
+        .edit-modal-header {
+            background: linear-gradient(135deg, rgba(50, 205, 50, 0.2) 0%, rgba(40, 164, 40, 0.1) 100%);
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(50, 205, 50, 0.2);
+        }
+
+        .edit-modal-header h2 {
+            margin: 0;
+            color: #32CD32;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .edit-modal-header .crime-id-badge {
+            background: rgba(50, 205, 50, 0.2);
+            color: #32CD32;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .edit-modal-body {
+            padding: 30px;
+        }
+
+        .edit-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .edit-input-group {
+            position: relative;
+        }
+
+        .edit-input-group label {
+            display: block;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .edit-input-group i {
+            position: absolute;
+            left: 15px;
+            top: 43px;
+            color: #32CD32;
+            font-size: 18px;
+        }
+
+        .edit-input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border-radius: 12px;
+            border: 1px solid rgba(50, 205, 50, 0.2);
+            background-color: rgba(26, 26, 26, 0.8);
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .edit-input-group input:focus {
+            outline: none;
+            border-color: #32CD32;
+            background-color: rgba(26, 26, 26, 1);
+            box-shadow: 0 0 20px rgba(50, 205, 50, 0.2);
+        }
+
+        .edit-input-group input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .edit-modal-footer {
+            padding: 0 30px 30px 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .edit-modal-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .edit-modal-btn-save {
+            background: linear-gradient(135deg, #32CD32 0%, #28a428 100%);
+            color: #fff;
+        }
+
+        .edit-modal-btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(50, 205, 50, 0.4);
+        }
+
+        .edit-modal-btn-save:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .edit-modal-btn-cancel {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.3) 0%, rgba(195, 53, 80, 0.3) 100%);
+            color: #e94560;
+            border: 1px solid rgba(233, 69, 96, 0.3);
+        }
+
+        .edit-modal-btn-cancel:hover {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.4) 0%, rgba(195, 53, 80, 0.4) 100%);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            #crimeForm {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+
+            .table-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                margin: 30% auto;
+                width: 95%;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+
+            .edit-modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+
+            .edit-modal-body {
+                padding: 20px;
+            }
+
+            .edit-modal-footer {
+                flex-direction: column;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header fade-in">
+            <div class="header-title">
+                <i class="fas fa-shield-alt header-icon"></i>
+                <h1>CrimeSpotter</h1>
+            </div>
+            <p class="subtitle">Manage Crime Records - Dashboard</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section fade-in">
+            <div class="stat-card">
+                <i class="fas fa-database stat-icon" style="color: #32CD32;"></i>
+                <div class="stat-number" id="totalRecords">0</div>
+                <div class="stat-label">Total Records</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-exclamation-triangle stat-icon" style="color: #FF6B6B;"></i>
+                <div class="stat-number" id="totalCrimes">0</div>
+                <div class="stat-label">Active Crimes</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-map-marker-alt stat-icon" style="color: #FFD93D;"></i>
+                <div class="stat-number" id="totalLocations">0</div>
+                <div class="stat-label">Locations</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock stat-icon" style="color: #6C5CE7;"></i>
+                <div class="stat-number" id="lastUpdated">--:--</div>
+                <div class="stat-label">Last Updated</div>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section fade-in">
+            <h2 class="form-title">
+                <i class="fas fa-plus-circle"></i>
+                <span id="formTitle">Add New Crime Record</span>
+            </h2>
+
+            <form id="crimeForm">
+                <input type="hidden" id="crimeId">
+                
+                <div class="input-group">
+                    <i class="fas fa-exclamation-circle input-icon"></i>
+                    <input type="text" id="crimeType" placeholder="Crime Type (e.g., Theft, Assault)" required>
+                </div>
+
+                <div class="input-group">
+                    <i class="fas fa-map-marker-alt input-icon"></i>
+                    <input type="text" id="crimeLocation" placeholder="Location" required oninput="fetchCoordinates()">
+                </div>
+
+                <div class="input-group">
+                    <i class="fas fa-compass input-icon"></i>
+                    <input type="text" id="crimeLatitude" placeholder="Latitude" required readonly>
+                </div>
+
+                <div class="input-group">
+                    <i class="fas fa-compass input-icon"></i>
+                    <input type="text" id="crimeLongitude" placeholder="Longitude" required readonly>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="add-btn">
+                        <i class="fas fa-save"></i>
+                        <span id="submitBtnText">Add Crime</span>
+                    </button>
+                    <button type="button" class="reset-btn" onclick="resetForm()">
+                        <i class="fas fa-undo"></i>
+                        Reset Form
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-section fade-in">
+            <div class="table-header">
+                <h2 class="table-title">
+                    <i class="fas fa-list-ul"></i>
+                    Crime Records
+                </h2>
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Search records..." oninput="searchRecords()">
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag"></i> ID</th>
+                            <th><i class="fas fa-exclamation-triangle"></i> Crime Type</th>
+                            <th><i class="fas fa-map-marker-alt"></i> Location</th>
+                            <th><i class="fas fa-compass"></i> Latitude</th>
+                            <th><i class="fas fa-compass"></i> Longitude</th>
+                            <th><i class="fas fa-cog"></i> Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="crimeTableBody">
+
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Passkey Modal -->
+    <div id="passkeyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <i class="fas fa-lock"></i>
+                    Security Verification
+                </h2>
+                <p>Enter the passkey to edit crime record</p>
+            </div>
+            <div class="modal-body">
+                <div class="passkey-input-group">
+                    <i class="fas fa-key"></i>
+                    <input 
+                        type="password" 
+                        id="passkeyInput" 
+                        placeholder="Enter passkey" 
+                        maxlength="4"
+                        autocomplete="off"
+                    >
+                </div>
+                <div id="passkeyError" class="passkey-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Incorrect passkey. Please try again.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" onclick="closePasskeyModal()">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+                <button class="modal-btn modal-btn-confirm" onclick="verifyPasskey()">
+                    <i class="fas fa-check"></i>
+                    Verify
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Crime Modal -->
+    <div id="editCrimeModal" class="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h2>
+                    <i class="fas fa-edit"></i>
+                    Edit Crime Record
+                    <span class="crime-id-badge">ID: <span id="editCrimeId">-</span></span>
+                </h2>
+            </div>
+            <div class="edit-modal-body">
+                <form id="editCrimeForm" class="edit-form">
+                    <div class="edit-input-group">
+                        <label for="editCrimeType">
+                            <i class="fas fa-exclamation-circle"></i>
+                            Crime Type
+                        </label>
+                        <i class="fas fa-exclamation-circle input-icon"></i>
+                        <input 
+                            type="text" 
+                            id="editCrimeType" 
+                            placeholder="Crime Type (e.g., Theft, Assault)"
+                            required
+                        >
+                    </div>
+
+                    <div class="edit-input-group">
+                        <label for="editCrimeLocation">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Location
+                        </label>
+                        <i class="fas fa-map-marker-alt input-icon"></i>
+                        <input 
+                            type="text" 
+                            id="editCrimeLocation" 
+                            placeholder="Location"
+                            required
+                            oninput="updateCoordinatesForEdit()"
+                        >
+                    </div>
+
+                    <div class="edit-input-group">
+                        <label for="editCrimeLatitude">
+                            <i class="fas fa-compass"></i>
+                            Latitude
+                        </label>
+                        <i class="fas fa-compass input-icon"></i>
+                        <input 
+                            type="text" 
+                            id="editCrimeLatitude" 
+                            placeholder="Latitude"
+                            required
+                            readonly
+                        >
+                    </div>
+
+                    <div class="edit-input-group">
+                        <label for="editCrimeLongitude">
+                            <i class="fas fa-compass"></i>
+                            Longitude
+                        </label>
+                        <i class="fas fa-compass input-icon"></i>
+                        <input 
+                            type="text" 
+                            id="editCrimeLongitude" 
+                            placeholder="Longitude"
+                            required
+                            readonly
+                        >
+                    </div>
+                </form>
+            </div>
+            <div class="edit-modal-footer">
+                <button class="edit-modal-btn edit-modal-btn-cancel" onclick="closeEditModal()">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+                <button class="edit-modal-btn edit-modal-btn-save" onclick="saveEditedCrime()">
+                    <i class="fas fa-save"></i>
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://api-2-2-88x4.onrender.com/crimes"; 
+        const GEOCODE_API_KEY = "d6363f444b384201b35bb327964086ac"; 
+        const PASSKEY = "1977";
+
+        let allCrimes = [];
+        let pendingEditData = null;
+        let pendingAction = null; // 'edit' or 'delete'
+
+        // Fetch coordinates from location
+        async function fetchCoordinates() {
+            const location = document.getElementById("crimeLocation").value;
+            if (!location) {
+                document.getElementById("crimeLatitude").value = "";
+                document.getElementById("crimeLongitude").value = "";
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${GEOCODE_API_KEY}`);
+                const data = await response.json();
+
+                if (data.results.length > 0) {
+                    const { lat, lng } = data.results[0].geometry;
+                    document.getElementById("crimeLatitude").value = lat.toFixed(5);
+                    document.getElementById("crimeLongitude").value = lng.toFixed(5);
+                } else {
+                    document.getElementById("crimeLatitude").value = "";
+                    document.getElementById("crimeLongitude").value = "";
+                }
+            } catch (error) {
+                console.error("Error fetching coordinates:", error);
+            }
+        }
+
+        // Get crime type color
+        function getCrimeTypeColor(crimeType) {
+            const type = crimeType.toLowerCase();
+            if (type.includes('theft') || type.includes('robbery') || type.includes('burglary')) return '#FF6B6B';
+            if (type.includes('assault') || type.includes('violence') || type.includes('homicide')) return '#e94560';
+            if (type.includes('fraud') || type.includes('cybercrime')) return '#FFD93D';
+            if (type.includes('vandalism') || type.includes('arson')) return '#FF8C42';
+            if (type.includes('kidnapping') || type.includes('trafficking')) return '#c23550';
+            if (type.includes('drug')) return '#6C5CE7';
+            return '#32CD32';
+        }
+
+        // Update statistics
+        function updateStats(crimes) {
+            document.getElementById('totalRecords').textContent = crimes.length;
+            document.getElementById('totalCrimes').textContent = crimes.length;
+            
+            const uniqueLocations = new Set(crimes.map(c => c.location)).size;
+            document.getElementById('totalLocations').textContent = uniqueLocations;
+            
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        // Form submission
+        document.getElementById("crimeForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const crimeId = document.getElementById("crimeId").value;
+            const crimeType = document.getElementById("crimeType").value;
+            const crimeLocation = document.getElementById("crimeLocation").value;
+            const latitude = document.getElementById("crimeLatitude").value;
+            const longitude = document.getElementById("crimeLongitude").value;
+
+            if (!crimeType || !crimeLocation || !latitude || !longitude) {
+                alert("⚠️ Please provide valid crime details and location.");
+                return;
+            }
+
+            const submitBtn = document.querySelector('.add-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+
+            const method = crimeId ? "PUT" : "POST";
+            const url = crimeId ? `${API_URL}/${crimeId}` : API_URL;
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        crime_type: crimeType, 
+                        location: crimeLocation, 
+                        latitude: parseFloat(latitude), 
+                        longitude: parseFloat(longitude) 
+                    })
+                });
+
+                if (response.ok) {
+                    await fetchCrimes();
+                    resetForm();
+                    alert(crimeId ? "✅ Crime record updated successfully!" : "✅ Crime record added successfully!");
+                } else {
+                    throw new Error('Failed to save crime record');
+                }
+            } catch (error) {
+                console.error("Error adding/updating crime:", error);
+                alert("❌ Error saving crime record. Please try again.");
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Fetch all crimes
+        async function fetchCrimes() {
+            const tableBody = document.getElementById("crimeTableBody");
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan='6' class='loading-state'>
+                        <i class='fas fa-spinner fa-spin pulse'></i>
+                        <br>Loading crime records...
+                    </td>
+                </tr>
+            `;
+
+            try {
+                const response = await fetch(API_URL);
+                const crimes = await response.json();
+                allCrimes = crimes;
+
+                updateStats(crimes);
+
+                if (crimes.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan='6' class='empty-state'>
+                                <i class='fas fa-inbox'></i>
+                                <br>No crime records found
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                renderTable(crimes);
+            } catch (error) {
+                console.error("Error fetching crimes:", error);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan='6' class='error-state'>
+                            <i class='fas fa-exclamation-circle'></i>
+                            <br>Error fetching data. Please try again later.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Render table
+        function renderTable(crimes) {
+            const tableBody = document.getElementById("crimeTableBody");
+            tableBody.innerHTML = "";
+
+            crimes.reverse().forEach(crime => {
+                const color = getCrimeTypeColor(crime.crime_type);
+                const row = `
+                    <tr class="fade-in">
+                        <td>${crime.id}</td>
+                        <td>
+                            <span class="crime-badge" style="background: ${color}20; color: ${color}; border: 1px solid ${color}">
+                                ${crime.crime_type}
+                            </span>
+                        </td>
+                        <td><i class="fas fa-map-marker-alt" style="color: ${color}; margin-right: 5px;"></i>${crime.location}</td>
+                        <td>${crime.latitude ? crime.latitude.toFixed(5) : 'N/A'}</td>
+                        <td>${crime.longitude ? crime.longitude.toFixed(5) : 'N/A'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="edit-btn" onclick="showPasskeyModal(${crime.id}, '${crime.crime_type.replace(/'/g, "\\'")}', '${crime.location.replace(/'/g, "\\'")}', ${crime.latitude}, ${crime.longitude})">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="delete-btn" onclick="showDeletePasskeyModal(${crime.id})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Search functionality
+        function searchRecords() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                renderTable(allCrimes);
+                return;
+            }
+
+            const filtered = allCrimes.filter(crime => 
+                crime.crime_type.toLowerCase().includes(searchTerm) ||
+                crime.location.toLowerCase().includes(searchTerm) ||
+                crime.id.toString().includes(searchTerm)
+            );
+
+            renderTable(filtered);
+        }
+
+        // Show passkey modal for edit
+        function showPasskeyModal(id, type, location, lat, lng) {
+            pendingEditData = { id, type, location, lat, lng };
+            pendingAction = 'edit';
+            document.getElementById('passkeyModal').style.display = 'block';
+            document.getElementById('passkeyInput').value = '';
+            document.getElementById('passkeyError').style.display = 'none';
+            
+            // Update modal text for edit
+            document.querySelector('#passkeyModal .modal-header p').textContent = 'Enter the passkey to edit crime record';
+            
+            // Focus on input
+            setTimeout(() => {
+                document.getElementById('passkeyInput').focus();
+            }, 100);
+        }
+
+        // Show passkey modal for delete
+        function showDeletePasskeyModal(id) {
+            pendingEditData = { id };
+            pendingAction = 'delete';
+            document.getElementById('passkeyModal').style.display = 'block';
+            document.getElementById('passkeyInput').value = '';
+            document.getElementById('passkeyError').style.display = 'none';
+            
+            // Update modal text for delete
+            document.querySelector('#passkeyModal .modal-header p').textContent = 'Enter the passkey to delete crime record';
+            
+            // Focus on input
+            setTimeout(() => {
+                document.getElementById('passkeyInput').focus();
+            }, 100);
+        }
+
+        // Close passkey modal
+        function closePasskeyModal() {
+            document.getElementById('passkeyModal').style.display = 'none';
+            document.getElementById('passkeyInput').value = '';
+            document.getElementById('passkeyError').style.display = 'none';
+            // Don't clear pendingEditData and pendingAction immediately
+            // They will be cleared when the edit modal closes or action completes
+        }
+
+        // Verify passkey
+        function verifyPasskey() {
+            const enteredPasskey = document.getElementById('passkeyInput').value;
+            const errorDiv = document.getElementById('passkeyError');
+
+            console.log('Verifying passkey:', enteredPasskey, 'Expected:', PASSKEY);
+            console.log('Pending action:', pendingAction);
+            console.log('Pending edit data:', pendingEditData);
+
+            if (enteredPasskey === PASSKEY) {
+                // Correct passkey
+                console.log('Passkey correct!');
+                
+                if (pendingEditData && pendingAction === 'edit') {
+                    // Close passkey modal first, then show edit modal after a brief delay
+                    closePasskeyModal();
+                    console.log('Opening edit modal with data:', pendingEditData);
+                    setTimeout(() => {
+                        showEditModal(
+                            pendingEditData.id,
+                            pendingEditData.type,
+                            pendingEditData.location,
+                            pendingEditData.lat,
+                            pendingEditData.lng
+                        );
+                    }, 100);
+                } else if (pendingEditData && pendingAction === 'delete') {
+                    // Proceed with delete
+                    closePasskeyModal();
+                    console.log('Proceeding with delete for ID:', pendingEditData.id);
+                    setTimeout(() => {
+                        confirmAndDeleteCrime(pendingEditData.id);
+                    }, 100);
+                }
+            } else {
+                // Incorrect passkey
+                console.log('Passkey incorrect');
+                errorDiv.style.display = 'block';
+                document.getElementById('passkeyInput').value = '';
+                document.getElementById('passkeyInput').focus();
+                
+                // Add shake animation
+                const input = document.getElementById('passkeyInput');
+                input.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    input.style.animation = '';
+                }, 500);
+            }
+        }
+
+        // Show edit modal
+        function showEditModal(id, type, location, lat, lng) {
+            console.log('showEditModal called with:', { id, type, location, lat, lng });
+            
+            document.getElementById('editCrimeId').textContent = id;
+            document.getElementById('editCrimeType').value = type || '';
+            document.getElementById('editCrimeLocation').value = location || '';
+            document.getElementById('editCrimeLatitude').value = lat ? lat.toFixed(5) : '';
+            document.getElementById('editCrimeLongitude').value = lng ? lng.toFixed(5) : '';
+            
+            const modal = document.getElementById('editCrimeModal');
+            console.log('Edit modal element:', modal);
+            modal.style.display = 'block';
+            
+            // Store current crime ID
+            pendingEditData = { id, type, location, lat, lng };
+        }
+
+        // Close edit modal
+        function closeEditModal() {
+            document.getElementById('editCrimeModal').style.display = 'none';
+            pendingEditData = null;
+            pendingAction = null;
+        }
+
+        // Update coordinates for edit modal
+        async function updateCoordinatesForEdit() {
+            const location = document.getElementById("editCrimeLocation").value;
+            if (!location) {
+                document.getElementById("editCrimeLatitude").value = "";
+                document.getElementById("editCrimeLongitude").value = "";
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${GEOCODE_API_KEY}`);
+                const data = await response.json();
+
+                if (data.results.length > 0) {
+                    const { lat, lng } = data.results[0].geometry;
+                    document.getElementById("editCrimeLatitude").value = lat.toFixed(5);
+                    document.getElementById("editCrimeLongitude").value = lng.toFixed(5);
+                } else {
+                    document.getElementById("editCrimeLatitude").value = "";
+                    document.getElementById("editCrimeLongitude").value = "";
+                }
+            } catch (error) {
+                console.error("Error fetching coordinates:", error);
+            }
+        }
+
+        // Save edited crime
+        async function saveEditedCrime() {
+            if (!pendingEditData) return;
+
+            const id = pendingEditData.id;
+            const crimeType = document.getElementById('editCrimeType').value;
+            const location = document.getElementById('editCrimeLocation').value;
+            const latitude = document.getElementById('editCrimeLatitude').value;
+            const longitude = document.getElementById('editCrimeLongitude').value;
+
+            if (!crimeType || !location || !latitude || !longitude) {
+                alert("⚠️ Please fill in all fields.");
+                return;
+            }
+
+            const saveBtn = document.querySelector('.edit-modal-btn-save');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            saveBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        crime_type: crimeType, 
+                        location: location, 
+                        latitude: parseFloat(latitude), 
+                        longitude: parseFloat(longitude) 
+                    })
+                });
+
+                if (response.ok) {
+                    await fetchCrimes();
+                    closeEditModal();
+                    alert("✅ Crime record updated successfully!");
+                } else {
+                    throw new Error('Failed to update crime record');
+                }
+            } catch (error) {
+                console.error("Error updating crime:", error);
+                alert("❌ Error updating crime record. Please try again.");
+            } finally {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+
+        // Handle Enter key in passkey input
+        document.addEventListener('DOMContentLoaded', function() {
+            const passkeyInput = document.getElementById('passkeyInput');
+            if (passkeyInput) {
+                passkeyInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        verifyPasskey();
+                    }
+                });
+            }
+
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                const passkeyModal = document.getElementById('passkeyModal');
+                const editModal = document.getElementById('editCrimeModal');
+                
+                if (event.target === passkeyModal) {
+                    closePasskeyModal();
+                }
+                if (event.target === editModal) {
+                    closeEditModal();
+                }
+            };
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closePasskeyModal();
+                    closeEditModal();
+                }
+            });
+        });
+
+        // Confirm and delete crime (called after passkey verification)
+        async function confirmAndDeleteCrime(id) {
+            if (!confirm("⚠️ Are you sure you want to delete this crime record? This action cannot be undone.")) {
+                // User cancelled, clear pending data
+                pendingEditData = null;
+                pendingAction = null;
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+                
+                if (response.ok) {
+                    await fetchCrimes();
+                    alert("✅ Crime record deleted successfully!");
+                } else {
+                    throw new Error('Failed to delete crime record');
+                }
+            } catch (error) {
+                console.error("Error deleting crime:", error);
+                alert("❌ Error deleting crime record. Please try again.");
+            } finally {
+                // Clear pending data after delete attempt
+                pendingEditData = null;
+                pendingAction = null;
+            }
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById("crimeForm").reset();
+            document.getElementById("crimeId").value = "";
+            document.getElementById("formTitle").innerHTML = '<i class="fas fa-plus-circle"></i> Add New Crime Record';
+            document.getElementById("submitBtnText").textContent = 'Add Crime';
+        }
+
+        // Initialize
+        fetchCrimes();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(fetchCrimes, 30000);
+    </script>
+</body>
+</html>
